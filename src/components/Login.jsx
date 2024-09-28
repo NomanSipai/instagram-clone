@@ -1,48 +1,11 @@
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import UserContext from "./context/UserContext";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+  const { register, handleSubmit, errors, handleLogin } =
+    useContext(UserContext);
 
-  const redirect = useNavigate();
-
-  const handleLogin = async (data) => {
-    const { email, password } = data;
-
-    try {
-      const res = await axios.post(
-        "http://192.168.1.77:3001/api/users/login",
-        {
-          email,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      const token = res.data.token;
-
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      sessionStorage.setItem("jwtToken", token);
-
-      toast.success(res.data.message);
-      reset();
-
-      redirect("/home");
-    } catch (err) {
-      toast.error("Invalid Email and Password");
-      console.log(err);
-    }
-  };
   return (
     <section className="bg-gray-50">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

@@ -14,7 +14,7 @@ const Register = () => {
 
   const redirect = useNavigate();
 
-  const login = (data) => {
+  const loggedIn = (data) => {
     const { first_name, last_name, username, email, password } = data;
     axios
       .post("http://192.168.1.77:3000/api/users/register", {
@@ -43,7 +43,7 @@ const Register = () => {
             </h1>
             <form
               className="space-y-4 md:space-y-6"
-              onSubmit={handleSubmit(login)}
+              onSubmit={handleSubmit(loggedIn)}
             >
               <div className="md:flex mx-auto">
                 <div className="me-auto mb-4">

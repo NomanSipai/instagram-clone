@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Avatar from "./Avatar";
+import UserProfile from "./UserProfile";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,7 @@ const Header = () => {
           <a href="#logout" className="text-gray-700 hover:text-blue-500">
             Logout
           </a>
-          <Avatar />
+          <UserProfile />
         </div>
         <button
           onClick={toggleMenu}

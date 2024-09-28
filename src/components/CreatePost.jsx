@@ -14,16 +14,17 @@ const CreatePost = () => {
       formData.append("image", image);
     }
 
-    console.log("formData", formData);
-
     try {
+      const token = JSON.parse(localStorage.getItem("token"));
       const res = await axios.post(
         "http://192.168.1.77:3000/api/posts/upload",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: token,
           },
+          withCredentials: true,
         }
       );
 

@@ -1,11 +1,23 @@
+import { useContext, useEffect } from "react";
+import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ element }) => {
-  const navigate = useNavigate();
-  const jswToken = sessionStorage.getItem("jwtToken");
+  const { jswToken } = useContext(UserContext);
+  console.log(jswToken);
 
-  return jswToken ? element : navigate("/");
+  // const token = jswToken;
+  const navigate = useNavigate();
+  const token = JSON.parse(localStorage.getItem("token"));
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/"); // Redirect to login if no token
+      console.log("hi");
+    }
+  }, [token, navigate]);
+
+  return token ? element : null; // Render the element if authenticated
 };
 
 export default PrivateRoute;

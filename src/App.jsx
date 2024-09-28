@@ -4,7 +4,6 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import { Toaster } from "react-hot-toast";
 import PrivateRoute from "./components/privateRout/PrivateRout";
-import CommentSection from "./components/CommentSection";
 
 function App() {
   return (
@@ -14,6 +13,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<PrivateRoute element={<Home />} />} />
+        {/* <Route path="/home" element={<Home />} /> */}
       </Routes>
     </>
   );

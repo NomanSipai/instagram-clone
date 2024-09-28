@@ -1,30 +1,19 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import Post from "./Post";
 import Header from "./Header";
-import mdata from "../DATA.json";
-// import Avatar from "./Avatar";
 import CreatePost from "./CreatePost";
+import UserContext from "./context/UserContext";
 
 const Home = () => {
-  const data = useMemo(() => mdata, []);
+  const { postList } = useContext(UserContext);
+  console.log(postList, "nodemon");
 
   return (
     <>
       <Header />
       <CreatePost />
       <div className="container px-4 mx-auto">
-        {data.map((post) => {
-          return (
-            <Post
-              key={post.id}
-              id={post.id}
-              userName={post.user_name}
-              description={post.description}
-              image={post.user_image}
-              postImage={post.post_image}
-            />
-          );
-        })}
+        {postList && postList.map((item) => <Post key={item.id} item={item} />)}
       </div>
     </>
   );

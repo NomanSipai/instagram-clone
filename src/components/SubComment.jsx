@@ -1,6 +1,8 @@
 import React from "react";
 
-const SubComment = () => {
+const SubComment = ({ subcom }) => {
+  console.log("subcom", subcom);
+
   return (
     <article className="p-6 mb-3 ml-6 lg:ml-12 text-base bg-white rounded-lg ">
       <footer className="flex justify-between items-center mb-2">

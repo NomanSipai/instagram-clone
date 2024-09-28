@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import CommentSection from "./CommentSection";
+import UserContext from "./context/UserContext";
 
-const Post = ({ userName, description, image, postImage }) => {
+const Post = ({ item }) => {
   const [toggleComment, setToggleComment] = useState(false);
+  const { postList } = useContext(UserContext);
+  console.log("comments", postList);
 
   const handleLike = () => {
     setToggleComment((prev) => !prev);
@@ -11,13 +14,21 @@ const Post = ({ userName, description, image, postImage }) => {
   return (
     <div className="mb-20">
       <div className="max-w-xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-        <img className="w-full  object-cover" src={postImage} alt="Post" />
+        <img
+          className="w-full  object-cover"
+          src={item?.image_url}
+          alt="Post"
+        />
         <div className="p-4">
           <div className="flex items-center">
-            <img className="w-10 h-10 rounded-full" src={image} alt="User" />
-            <h2 className="ml-2 font-semibold">{userName}</h2>
+            <img
+              className="w-10 h-10 rounded-full"
+              src={item?.image_url}
+              alt="User"
+            />
+            <h2 className="ml-2 font-semibold">{item?.user.username}</h2>
           </div>
-          <p className="mt-2 text-gray-600">{description} #sample #caption</p>
+          <p className="mt-2 text-gray-600">{item?.description}</p>
           <div className="mt-4 flex items-center">
             <button className="text-gray-600 hover:text-blue-600">
               <svg
@@ -47,7 +58,7 @@ const Post = ({ userName, description, image, postImage }) => {
           </div>
         </div>
       </div>
-      {toggleComment && <CommentSection />}
+      {toggleComment && <CommentSection item={item} />}
     </div>
   );
 };

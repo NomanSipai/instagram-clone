@@ -1,13 +1,16 @@
 import React, { useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import UserContext from "./context/UserContext";
+import { useContext } from "react";
 
-const Avatar = ({ img }) => {
+const UserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useContext(UserContext);
 
-  const user = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
+  // const user = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
 
-  const navigate = useNavigate();
+  const redirect = useNavigate();
 
   console.log("users", user.email);
 
@@ -19,8 +22,8 @@ const Avatar = ({ img }) => {
     console.log("Sign out");
     setIsOpen(false);
     toast.success("You have successfully logged out.");
-    sessionStorage.removeItem("jwtToken");
-    navigate("/");
+    localStorage.removeItem("token");
+    redirect("/");
   };
 
   return (
@@ -39,9 +42,15 @@ const Avatar = ({ img }) => {
       {isOpen && (
         <div className="absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div className="py-1">
-            <p className="px-4 py-2 text-sm text-gray-700">{user.username}</p>
-            <p className="px-4 py-2 text-sm text-gray-700">{`${user.first_name} ${user.last_name}`}</p>
-            <p className="px-4 py-2 text-sm text-gray-500">{user.email}</p>
+            <p className="px-4 py-2 text-sm text-gray-700">
+              {user ? user.username : ""}
+            </p>
+            <p className="px-4 py-2 text-sm text-gray-700">{`${
+              user ? user.first_name : ""
+            } ${user.last_name}`}</p>
+            <p className="px-4 py-2 text-sm text-gray-500">
+              {user ? user.email : ""}
+            </p>
             <hr className="my-1" />
             <button
               onClick={handleSignOut}
@@ -56,4 +65,4 @@ const Avatar = ({ img }) => {
   );
 };
 
-export default Avatar;
+export default UserProfile;
