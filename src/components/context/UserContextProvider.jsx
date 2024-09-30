@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const UserContextProvider = ({ children }) => {
-  // const [jwsToken, setJwsToken] = useState("");
   const [user, setUser] = useState([]);
   const [postList, setPostList] = useState([]);
+
   const redirect = useNavigate();
 
   //   login
@@ -25,7 +25,7 @@ const UserContextProvider = ({ children }) => {
 
     try {
       const res = await axios.post(
-        "http://192.168.1.77:3000/api/users/login",
+        "http://192.168.1.39:3001/api/users/login",
         {
           email,
           password,
@@ -37,7 +37,7 @@ const UserContextProvider = ({ children }) => {
       // setJwsToken(res.data.token);
       setUser(res.data.user);
       // setPostList(res.data.post);
-      console.log(res.data.post);
+      getAllPosts();
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", JSON.stringify(res.data.token));
@@ -51,19 +51,44 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  const getAllPosts = async () => {
+    try {
+      const response = await axios.get("http://192.168.1.39:3001/api/posts");
+      setPostList(response.data.data); // Adjust based on your API response structure
+      console.log("this is my post", response.data.data);
+
+      console.log("Post Response", response.data.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
+  useEffect(() => {
+    getAllPosts(); // Fetch posts
+  }, []);
+
+  const handleUserDetailsPage = async (id) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+
+      const response = await axios.post(
+        `http://192.168.1.39:3001/api/users/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+          withCredentials: true,
+        }
+      );
+      console.log("userDataaa", response.data);
+    } catch (error) {
+      console.error("Error liking the post:", error);
+    }
+  };
+
   // ****************************** login   **************************
 
   ////      *****************************        Get All Posts       *************************************
-
-  const getAllPosts = () => {
-    axios.get("http://192.168.1.77:3000/api/posts/").then((res) => {
-      setPostList(res.data.post);
-    });
-  };
-
-  useEffect(() => {
-    getAllPosts();
-  }, []);
 
   return (
     <UserContext.Provider
@@ -74,7 +99,9 @@ const UserContextProvider = ({ children }) => {
         reset,
         handleLogin,
         user,
+        getAllPosts,
         postList,
+        handleUserDetailsPage,
       }}
     >
       {children}

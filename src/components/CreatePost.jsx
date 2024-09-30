@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
   const { register, handleSubmit, reset } = useForm();
   const [image, setImage] = useState(null);
+  const redirect = useNavigate("/home");
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -17,7 +19,7 @@ const CreatePost = () => {
     try {
       const token = JSON.parse(localStorage.getItem("token"));
       const res = await axios.post(
-        "http://192.168.1.77:3000/api/posts/upload",
+        "http://192.168.1.39:3001/api/posts",
         formData,
         {
           headers: {
@@ -79,6 +81,12 @@ const CreatePost = () => {
       </div>
       <button type="submit" className="bg-blue-500 text-white p-2 rounded">
         Create Post
+      </button>
+      <button
+        className="bg-gray-500 hover:bg-slate-700 p-2 ms-2 text-white rounded"
+        onClick={() => redirect("/home")}
+      >
+        Back to Home
       </button>
     </form>
   );

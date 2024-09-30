@@ -1,8 +1,13 @@
 import React from "react";
 
-const SubComment = ({ subcom }) => {
-  console.log("subcom", subcom);
-
+const SubComment = ({
+  user,
+  user_id,
+  comment_id,
+  replyLikes,
+  reply,
+  created_at,
+}) => {
   return (
     <article className="p-6 mb-3 ml-6 lg:ml-12 text-base bg-white rounded-lg ">
       <footer className="flex justify-between items-center mb-2">
@@ -13,11 +18,11 @@ const SubComment = ({ subcom }) => {
               src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
               alt="Jese Leos"
             />
-            Jese Leos
+            {user?.username}
           </p>
           <p className="text-sm text-gray-600 ">
             <time pubdate="" dateTime="2022-02-12" title="February 12th, 2022">
-              Feb. 12, 2022
+              {created_at}
             </time>
           </p>
         </div>
@@ -65,9 +70,7 @@ const SubComment = ({ subcom }) => {
           </ul>
         </div>
       </footer>
-      <p className="text-gray-500 dark:text-gray-400">
-        Much appreciated! Glad you liked it ☺️
-      </p>
+      <p className="text-gray-500 dark:text-gray-400">{reply}</p>
       <div className="flex items-center mt-4 space-x-4">
         <button
           type="button"
@@ -88,7 +91,7 @@ const SubComment = ({ subcom }) => {
               d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z"
             />
           </svg>
-          Reply
+          Reply {replyLikes}
         </button>
       </div>
     </article>

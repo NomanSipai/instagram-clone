@@ -17,7 +17,7 @@ const Register = () => {
   const loggedIn = (data) => {
     const { first_name, last_name, username, email, password } = data;
     axios
-      .post("http://192.168.1.77:3000/api/users/register", {
+      .post("http://192.168.1.39:3001/api/users/register", {
         first_name: first_name,
         last_name: last_name,
         username: username,

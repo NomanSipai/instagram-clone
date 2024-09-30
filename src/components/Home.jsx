@@ -1,7 +1,7 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext } from "react";
 import Post from "./Post";
 import Header from "./Header";
-import CreatePost from "./CreatePost";
+// import CreatePost from "./CreatePost";
 import UserContext from "./context/UserContext";
 
 const Home = () => {
@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <CreatePost />
+      {/* <CreatePost /> */}
       <div className="container px-4 mx-auto">
         {postList && postList.map((item) => <Post key={item.id} item={item} />)}
       </div>
