@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { config } from "../confige/confige";
 
 const CreatePost = () => {
   const { register, handleSubmit, reset } = useForm();
@@ -18,17 +19,13 @@ const CreatePost = () => {
 
     try {
       const token = JSON.parse(localStorage.getItem("token"));
-      const res = await axios.post(
-        "http://192.168.1.39:3001/api/posts",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: token,
-          },
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(`${config.url}posts`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: token,
+        },
+        withCredentials: true,
+      });
 
       console.log("response" + res);
 

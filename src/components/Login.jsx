@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import UserContext from "./context/UserContext";
 import { Link } from "react-router-dom";
-
 const Login = () => {
   const { register, handleSubmit, errors, handleLogin } =
     useContext(UserContext);

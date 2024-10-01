@@ -4,10 +4,13 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { config } from "../../confige/confige";
 
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState([]);
   const [postList, setPostList] = useState([]);
+  const [userDetails, setUserDetails] = useState("");
+  const [skeletonLoder, setSkeletonLoader] = useState(false);
 
   const redirect = useNavigate();
 
@@ -25,7 +28,7 @@ const UserContextProvider = ({ children }) => {
 
     try {
       const res = await axios.post(
-        "http://192.168.1.39:3001/api/users/login",
+        `${config.url}users/login`,
         {
           email,
           password,
@@ -52,12 +55,14 @@ const UserContextProvider = ({ children }) => {
   };
 
   const getAllPosts = async () => {
+    setSkeletonLoader(true);
     try {
-      const response = await axios.get("http://192.168.1.39:3001/api/posts");
+      const response = await axios.get(`${config.url}posts`);
       setPostList(response.data.data); // Adjust based on your API response structure
       console.log("this is my post", response.data.data);
 
       console.log("Post Response", response.data.data);
+      setSkeletonLoader(false);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -66,12 +71,12 @@ const UserContextProvider = ({ children }) => {
     getAllPosts(); // Fetch posts
   }, []);
 
-  const handleUserDetailsPage = async (id) => {
+  const handleUserDetail = async (id) => {
     try {
       const token = JSON.parse(localStorage.getItem("token"));
 
-      const response = await axios.post(
-        `http://192.168.1.39:3001/api/users/${id}`,
+      const response = await axios.get(
+        `${config.url}users/${id}`,
         {},
         {
           headers: {
@@ -80,7 +85,11 @@ const UserContextProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-      console.log("userDataaa", response.data);
+      setUserDetails(response.data.data);
+      localStorage.setItem("userDetails", JSON.stringify(response.data.data));
+      console.log("userProfile", response.data.data);
+
+      console.log("Post liked successfully:", response.data);
     } catch (error) {
       console.error("Error liking the post:", error);
     }
@@ -88,7 +97,7 @@ const UserContextProvider = ({ children }) => {
 
   // ****************************** login   **************************
 
-  ////      *****************************        Get All Posts       *************************************
+  ////      *****************************        Delete Comments       *************************************
 
   return (
     <UserContext.Provider
@@ -101,7 +110,9 @@ const UserContextProvider = ({ children }) => {
         user,
         getAllPosts,
         postList,
-        handleUserDetailsPage,
+        handleUserDetail,
+        userDetails,
+        skeletonLoder,
       }}
     >
       {children}

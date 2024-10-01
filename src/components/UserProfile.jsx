@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import UserContext from "./context/UserContext";
@@ -8,11 +8,7 @@ const UserProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useContext(UserContext);
 
-  // const user = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
-
   const redirect = useNavigate();
-
-  console.log("users", user.email);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -32,11 +28,11 @@ const UserProfile = () => {
         onClick={handleToggle}
         className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"
       >
-        <img
-          className="w-10 h-10 rounded-full"
-          src="https://robohash.org/possimusquicorrupti.png?size=50x50&set=set1"
-          alt="Rounded avatar"
-        />
+        <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+          <span className="font-medium text-gray-600 uppercase dark:text-gray-300">
+            {`${user.username ? user.username[0] : ""}`}
+          </span>
+        </div>
       </button>
 
       {isOpen && (

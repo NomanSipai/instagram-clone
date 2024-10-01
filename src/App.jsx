@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 // import PrivateRoute from "./components/privateRout/PrivateRout";
 import CreatePost from "./components/CreatePost";
 import UserDetailsPage from "./components/UserDetailsPage";
+import UserUpdate from "./components/UserUpdate";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/createpost" element={<CreatePost />} />
         <Route path="/home" element={<Home />} />
         <Route path="/userdetails" element={<UserDetailsPage />} />
+        <Route path="userupdate" element={<UserUpdate />} />
       </Routes>
     </>
   );

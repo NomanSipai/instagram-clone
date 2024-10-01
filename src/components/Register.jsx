@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { config } from "../confige/confige";
 
 const Register = () => {
   const {
@@ -17,7 +18,7 @@ const Register = () => {
   const loggedIn = (data) => {
     const { first_name, last_name, username, email, password } = data;
     axios
-      .post("http://192.168.1.39:3001/api/users/register", {
+      .post(`${config.url}users/register`, {
         first_name: first_name,
         last_name: last_name,
         username: username,

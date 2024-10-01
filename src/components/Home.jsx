@@ -6,7 +6,6 @@ import UserContext from "./context/UserContext";
 
 const Home = () => {
   const { postList } = useContext(UserContext);
-  console.log(postList, "nodemon");
 
   return (
     <>
