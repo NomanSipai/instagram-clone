@@ -1,31 +1,14 @@
-import React, { useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import UserContext from "./context/UserContext";
 import { useContext } from "react";
 
 const UserProfile = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { user } = useContext(UserContext);
-
-  const redirect = useNavigate();
-
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleSignOut = () => {
-    console.log("Sign out");
-    setIsOpen(false);
-    toast.success("You have successfully logged out.");
-    localStorage.removeItem("token");
-    redirect("/");
-  };
+  const { user, toggleUserProfile, handleToggleUserProfile, handleSignOut } =
+    useContext(UserContext);
 
   return (
     <div className=" max-w-xs relative inline-block text-left">
       <button
-        onClick={handleToggle}
+        onClick={handleToggleUserProfile}
         className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"
       >
         <div className="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
@@ -35,7 +18,7 @@ const UserProfile = () => {
         </div>
       </button>
 
-      {isOpen && (
+      {toggleUserProfile && (
         <div className="absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div className="py-1">
             <p className="px-4 py-2 text-sm text-gray-700">

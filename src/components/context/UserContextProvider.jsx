@@ -7,10 +7,27 @@ import toast from "react-hot-toast";
 import { config } from "../../confige/confige";
 
 const UserContextProvider = ({ children }) => {
-  const [user, setUser] = useState([]);
+  const getUserLocalStorage = () => {
+    let list = localStorage.getItem("user");
+    if (list) {
+      return JSON.parse(localStorage.getItem("user"));
+    } else {
+      return [];
+    }
+  };
+
+  const [user, setUser] = useState(getUserLocalStorage());
+  const [toggleHeaderList, setToggleHeaderList] = useState(false);
+  const [toggleUserProfile, setToggleUserProfile] = useState(false);
   const [postList, setPostList] = useState([]);
   const [userDetails, setUserDetails] = useState("");
   const [skeletonLoder, setSkeletonLoader] = useState(false);
+  const [firstName, setFirstName] = useState(user?.first_name);
+  const [lastName, setLastName] = useState(user?.last_name);
+  const [email, setEmail] = useState(user?.email);
+  const [username, setUsername] = useState(user?.username);
+  const [error, setError] = useState("");
+  const [toggleUserUpdateModal, setToggleUserUpdateModal] = useState(false);
 
   const redirect = useNavigate();
 
@@ -40,10 +57,11 @@ const UserContextProvider = ({ children }) => {
       // setJwsToken(res.data.token);
       setUser(res.data.user);
       // setPostList(res.data.post);
-      getAllPosts();
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", JSON.stringify(res.data.token));
+      // getAllPosts();
+
       toast.success(res.data.message);
       reset();
 
@@ -53,6 +71,35 @@ const UserContextProvider = ({ children }) => {
       console.log(err);
     }
   };
+
+  /////////////////////  Header    {
+
+  const handleHeaderToggleMenu = () => {
+    setToggleHeaderList(!toggleHeaderList);
+  };
+
+  ///////////////////////////      }
+
+  /////////           User Profile {
+
+  const handleToggleUserProfile = () => {
+    setToggleUserProfile(!toggleUserProfile);
+  };
+
+  //                             }
+
+  // signOut                {
+
+  const handleSignOut = () => {
+    console.log("Sign out");
+    setToggleUserProfile(false);
+    toast.success("You have successfully logged out.");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userDetails");
+    redirect("/");
+  };
+
+  //                          }
 
   const getAllPosts = async () => {
     setSkeletonLoader(true);
@@ -70,6 +117,8 @@ const UserContextProvider = ({ children }) => {
   useEffect(() => {
     getAllPosts(); // Fetch posts
   }, []);
+
+  ////                         Post
 
   const handleUserDetail = async (id) => {
     try {
@@ -95,9 +144,46 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
-  // ****************************** login   **************************
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const token = JSON.parse(localStorage.getItem("token"));
+      const updatedUser = {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        username,
+      };
+      await axios.patch(`${config.url}users/update`, updatedUser, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      let newUser = {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        username: username,
+      };
+      setUser(newUser);
+      toast.success("User updated successfully");
+      getAllPosts();
+      redirect("/home");
+      setToggleUserUpdateModal(false);
+    } catch (err) {
+      setError("Failed to update user data");
+      console.error(err);
+    }
+  };
 
-  ////      *****************************        Delete Comments       *************************************
+  const handleUserUpdateData = () => {
+    setFirstName(user?.first_name);
+    setLastName(user?.last_name);
+    setEmail(user?.email);
+    setUsername(user?.username);
+    setToggleUserUpdateModal(true);
+    // redirect("/userdetails/userupdate");
+  };
 
   return (
     <UserContext.Provider
@@ -107,12 +193,32 @@ const UserContextProvider = ({ children }) => {
         errors,
         reset,
         handleLogin,
+        toggleHeaderList,
+        handleHeaderToggleMenu,
         user,
+        toggleUserProfile,
+        setToggleUserProfile,
+        handleToggleUserProfile,
+        handleSignOut,
         getAllPosts,
         postList,
         handleUserDetail,
         userDetails,
         skeletonLoder,
+        handleUserUpdateData,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
+        email,
+        setEmail,
+        username,
+        setUsername,
+        error,
+        setError,
+        handleUpdate,
+        toggleUserUpdateModal,
+        setToggleUserUpdateModal,
       }}
     >
       {children}

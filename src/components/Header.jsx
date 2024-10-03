@@ -1,14 +1,12 @@
-import { useState } from "react";
+import { useContext } from "react";
 import UserProfile from "./UserProfile";
 import { useNavigate } from "react-router-dom";
+import UserContext from "./context/UserContext";
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { toggleHeaderList, handleHeaderToggleMenu } = useContext(UserContext);
   const redirect = useNavigate("/createpost");
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
   return (
     <nav className="bg-white shadow mb-10">
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -37,7 +35,7 @@ const Header = () => {
           <UserProfile />
         </div>
         <button
-          onClick={toggleMenu}
+          onClick={handleHeaderToggleMenu}
           className="md:hidden text-gray-700 focus:outline-none"
         >
           <svg
@@ -56,7 +54,7 @@ const Header = () => {
           </svg>
         </button>
       </div>
-      {isOpen && (
+      {toggleHeaderList && (
         <div className="md:hidden">
           <a
             href="#sign-up"

@@ -8,6 +8,8 @@ const SubComment = ({
   reply,
   created_at,
 }) => {
+  console.log("subcomment user", user);
+
   return (
     <article className="p-6 mb-3 ml-6 lg:ml-12 text-base bg-white rounded-lg ">
       <footer className="flex justify-between items-center mb-2">
@@ -26,23 +28,7 @@ const SubComment = ({
             </time>
           </p>
         </div>
-        <button
-          id="dropdownComment2Button"
-          data-dropdown-toggle="dropdownComment2"
-          className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-40 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 "
-          type="button"
-        >
-          <svg
-            className="w-4 h-4"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 16 3"
-          >
-            <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-          </svg>
-          <span className="sr-only">Comment settings</span>
-        </button>
+
         {/* Dropdown menu */}
         <div
           id="dropdownComment2"
