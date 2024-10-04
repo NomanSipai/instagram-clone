@@ -6,17 +6,14 @@ import UserContext from "./context/UserContext";
 import { config } from "../confige/confige";
 
 const CommentSection = ({ item, setCommentLength, commentLength }) => {
-  // const { commentText, user, likes, replies, created_at } = commentArr;
   const [commentList, setCommentList] = useState(item.comments);
-  // const { handleDeleteComment } = useContext(UserContext);
-  const { user } = useContext(UserContext);
+  const { user, token } = useContext(UserContext);
   const [comment, setComment] = useState("");
   const [toggleSubCom, setToggleSubCom] = useState(false);
   const newReplyList = item?.comments?.map((elem) => elem?.replies);
   const [replyList, setReplyList] = useState(newReplyList);
   const [toggleCommentLike, setToggleCommentLike] = useState(false);
 
-  // const [toggleCommnetMenu, setToggleCommentMenu] = useState(false);
   console.log("replyList", replyList);
 
   const handleCancelComment = () => {
@@ -24,8 +21,6 @@ const CommentSection = ({ item, setCommentLength, commentLength }) => {
   };
 
   const handleCommentSubmit = () => {
-    const token = JSON.parse(localStorage.getItem("token"));
-
     let data = {
       comment: comment,
       user: user,
@@ -52,70 +47,10 @@ const CommentSection = ({ item, setCommentLength, commentLength }) => {
     }
   };
 
-  // const handleLikeApiCall = async (id) => {
-  //   console.log("like api", id);
-
-  //   setToggleCommentLike((prev) => !prev);
-
-  //   // setToggleLiked(false);
-
-  //   setToggleCommentLike((prev) => prev - 1);
-
-  //   try {
-  //     const token = JSON.parse(localStorage.getItem("token"));
-
-  //     const response = await axios.post(
-  //       `${config.url}likes/comment/${id}`,
-  //       {},
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     console.log("Post liked successfully:", response.data);
-  //   } catch (error) {
-  //     console.error("Error liking the post:", error);
-  //   }
-  // };
-
-  // const handleCommentLike = useCallback(
-  //   throttle((e, id) => handleLikeApiCall(id), 2000), // Adjust the time (2000ms) as needed
-  //   []
-  // );
-
-  // const handleCommentRemoveLike = async (id) => {
-  //   setToggleCommentLike((prev) => !prev);
-  //   // setToggleLiked(true);
-
-  //   setToggleCommentLike((prev) => prev + 1);
-
-  //   try {
-  //     const token = JSON.parse(localStorage.getItem("token"));
-
-  //     const response = await axios.post(
-  //       `${config.url}likes/comment/${id}`,
-  //       {},
-  //       {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-
-  //     console.log("Post liked successfully:", response.data);
-  //   } catch (error) {
-  //     console.error("Error liking the post:", error);
-  //   }
-  // };
-
   const handleLikeApiCall = async (id) => {
     console.log("like api", id);
 
-    setToggleCommentLike((prev) => prev + 1); // Increment for UI feedback
+    setToggleCommentLike((prev) => prev + 1);
 
     try {
       const token = JSON.parse(localStorage.getItem("token"));
@@ -191,62 +126,56 @@ const CommentSection = ({ item, setCommentLength, commentLength }) => {
     axios.post(`${config.url}reply/${id}`);
   };
 
-  // const replies = item?.comments.map((elem) => elem.replies);
-
-  // console.log("data replies");
-
-  // const handleOpenCommentMenu = () => {
-  //   setToggleCommentMenu((prev) => !prev);
-  // };
   return (
-    <section className="bg-white  py-8 lg:py-10 antialiased">
+    <section className="bg-white py-8 lg:py-10 antialiased">
       <div className="max-w-xl mx-auto px-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg lg:text-2xl font-bold text-gray-900 ">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg lg:text-2xl font-bold text-gray-900">
             Comments {commentLength}
           </h2>
         </div>
-        <div className="rounded-lg p-4">
+
+        <div className="rounded-lg p-4 bg-gray-50 shadow-sm">
           <textarea
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="4"
             placeholder="Add a comment..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-          ></textarea>
+          />
           <div className="flex justify-end mt-2">
             <button
-              className="mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-300 px-2 rounded-lg"
+              className="mr-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-lg transition duration-200"
               onClick={handleCancelComment}
             >
               Cancel
             </button>
             <button
-              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
               onClick={handleCommentSubmit}
             >
               Comment
             </button>
           </div>
         </div>
-        {/* {item?.comments} */}
+
         {commentList
           .filter((elem) => elem !== null)
           .map((elem) => (
-            <div key={elem?.id}>
-              <article className=" text-base bg-white rounded-lg ">
+            <div key={elem?.id} className="mt-4">
+              {console.log("comment User", user)}
+              <article className="bg-white rounded-lg shadow-md p-4">
                 <footer className="flex justify-between items-center mb-2">
                   <div className="flex items-center">
-                    <p className="inline-flex items-center mr-3 text-sm text-gray-900 ">
-                      <div className=" mr-2 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                        <span className="font-medium text-gray-600 dark:text-gray-300">
-                          {`${elem?.user?.username[0]}`}
-                        </span>
-                      </div>
-
+                    <div className="mr-3 relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full">
+                      <span className="font-medium text-gray-600">
+                        {`${elem?.user?.username[0]}`}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-900 font-medium">
                       {elem?.user?.username}
                     </p>
-                    <p className="text-sm text-gray-600 ">
+                    <p className="ml-3 text-sm text-gray-600">
                       <time>{elem?.created_at}</time>
                     </p>
                   </div>
@@ -254,73 +183,30 @@ const CommentSection = ({ item, setCommentLength, commentLength }) => {
                   <div>
                     {user && (
                       <button
-                        id="dropdownComment1Button"
-                        data-dropdown-toggle="dropdownComment1"
-                        className="inline-flex  items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 "
-                        type="button"
+                        className="text-gray-500 hover:text-red-500 transition duration-200"
                         onClick={() => handleDeleteComment(elem?.id)}
-                        // onClick={() => setToggleCommentMenu((prev) => !prev)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          width={16}
-                          height={16}
                           fill="currentColor"
-                          className="bi bi-x-lg"
+                          className="w-5 h-5"
                           viewBox="0 0 16 16"
                         >
-                          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 1 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z" />
                         </svg>
                       </button>
                     )}
                   </div>
-                  {/* Dropdown menu */}
-                  {/* {toggleCommnetMenu && (
-                    <div
-                      id="dropdownComment1"
-                      className=" z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow "
-                    >
-                      <ul
-                        className="py-1 text-sm text-gray-700"
-                        aria-labelledby="dropdownMenuIconHorizontalButton"
-                      >
-                        <li>
-                          <a
-                            href="#"
-                            className="block py-2 px-4 hover:bg-gray-100"
-                          >
-                            Edit
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="#"
-                            className="block py-2 px-4 hover:bg-gray-100"
-                          >
-                            Remove
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            href="#"
-                            className="block py-2 px-4 hover:bg-gray-100"
-                          >
-                            Report
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  )} */}
                 </footer>
-                <p className="text-gray-500 my-2 ms-5">{elem?.comment}</p>
+                <p className="text-gray-700 my-2">{elem?.comment}</p>
                 <div className="flex items-center mt-4 space-x-4">
                   <button
                     type="button"
-                    className="flex items-center text-sm text-gray-500 hover:underline font-medium"
+                    className="flex items-center text-sm text-gray-500 hover:underline"
                     onClick={() => handleReply(elem?.id)}
                   >
                     <svg
-                      className="mr-1.5 w-3.5 h-3.5"
+                      className="mr-1.5 w-4 h-4"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -338,7 +224,7 @@ const CommentSection = ({ item, setCommentLength, commentLength }) => {
                   </button>
                   {toggleCommentLike ? (
                     <button
-                      className="flex items-center text-sm text-gray-500 hover:underline font-medium"
+                      className="flex items-center text-sm text-gray-500 hover:underline"
                       onClick={() => handleCommentLike(elem?.id)}
                     >
                       <svg
@@ -352,7 +238,7 @@ const CommentSection = ({ item, setCommentLength, commentLength }) => {
                     </button>
                   ) : (
                     <button
-                      className="flex items-center text-sm text-gray-500 hover:underline font-medium"
+                      className="flex items-center text-sm text-gray-500 hover:underline"
                       onClick={() => handleCommentRemoveLike(elem?.id)}
                     >
                       <svg

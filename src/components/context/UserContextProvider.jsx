@@ -15,19 +15,39 @@ const UserContextProvider = ({ children }) => {
       return [];
     }
   };
+  const getTokenLocalStorage = () => {
+    let getToken = localStorage.getItem("token");
+    if (getToken) {
+      return JSON.parse(localStorage.getItem("token"));
+    } else {
+      return [];
+    }
+  };
 
+  const getUserDetailsLocalStorage = () => {
+    let getUserDetails = localStorage.getItem("userDetails");
+    if (getUserDetails) {
+      return JSON.parse(localStorage.getItem("userDetails"));
+    } else {
+      return [];
+    }
+  };
+
+  const [token, setToken] = useState(getTokenLocalStorage());
   const [user, setUser] = useState(getUserLocalStorage());
   const [toggleHeaderList, setToggleHeaderList] = useState(false);
   const [toggleUserProfile, setToggleUserProfile] = useState(false);
   const [postList, setPostList] = useState([]);
-  const [userDetails, setUserDetails] = useState("");
+  const [userDetails, setUserDetails] = useState(getUserDetailsLocalStorage());
   const [skeletonLoder, setSkeletonLoader] = useState(false);
   const [firstName, setFirstName] = useState(user?.first_name);
   const [lastName, setLastName] = useState(user?.last_name);
   const [email, setEmail] = useState(user?.email);
   const [username, setUsername] = useState(user?.username);
   const [error, setError] = useState("");
+  const [clickPost, setClickPost] = useState("");
   const [toggleUserUpdateModal, setToggleUserUpdateModal] = useState(false);
+  const [toggleUserPost, setToggleUSerPost] = useState(false);
 
   const redirect = useNavigate();
 
@@ -57,7 +77,7 @@ const UserContextProvider = ({ children }) => {
       // setJwsToken(res.data.token);
       setUser(res.data.user);
       // setPostList(res.data.post);
-
+      setToken(res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", JSON.stringify(res.data.token));
       // getAllPosts();
@@ -96,6 +116,8 @@ const UserContextProvider = ({ children }) => {
     toast.success("You have successfully logged out.");
     localStorage.removeItem("token");
     localStorage.removeItem("userDetails");
+    localStorage.removeItem("user");
+    setToken("");
     redirect("/");
   };
 
@@ -122,8 +144,6 @@ const UserContextProvider = ({ children }) => {
 
   const handleUserDetail = async (id) => {
     try {
-      const token = JSON.parse(localStorage.getItem("token"));
-
       const response = await axios.get(
         `${config.url}users/${id}`,
         {},
@@ -134,8 +154,8 @@ const UserContextProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-      setUserDetails(response.data.data);
       localStorage.setItem("userDetails", JSON.stringify(response.data.data));
+      setUserDetails(response.data.data);
       console.log("userProfile", response.data.data);
 
       console.log("Post liked successfully:", response.data);
@@ -147,7 +167,6 @@ const UserContextProvider = ({ children }) => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const token = JSON.parse(localStorage.getItem("token"));
       const updatedUser = {
         first_name: firstName,
         last_name: lastName,
@@ -182,12 +201,16 @@ const UserContextProvider = ({ children }) => {
     setEmail(user?.email);
     setUsername(user?.username);
     setToggleUserUpdateModal(true);
-    // redirect("/userdetails/userupdate");
+  };
+
+  const handlePostCLick = (id) => {
+    const clickedPost = postList.find((item) => item.id === id);
   };
 
   return (
     <UserContext.Provider
       value={{
+        token,
         register,
         handleSubmit,
         errors,
@@ -204,6 +227,7 @@ const UserContextProvider = ({ children }) => {
         postList,
         handleUserDetail,
         userDetails,
+        setUserDetails,
         skeletonLoder,
         handleUserUpdateData,
         firstName,
@@ -217,8 +241,13 @@ const UserContextProvider = ({ children }) => {
         error,
         setError,
         handleUpdate,
+        clickPost,
+        setClickPost,
         toggleUserUpdateModal,
         setToggleUserUpdateModal,
+        toggleUserPost,
+        setToggleUSerPost,
+        handlePostCLick,
       }}
     >
       {children}
